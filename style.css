@@ -1,0 +1,33 @@
+#board{
+    background:url(yahtzee.jpeg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 60%;
+    min-height: 80%;
+    margin: 20px;
+    border: 20px solid #e7e7e7;
+    border-radius: 10px;
+    background-color: rgba(0, 0, 0, 0.4);
+    background-blend-mode: darken;
+}
+
+#playarea{
+     mind-height: 80%;
+     display: flex;
+     justify-content: flex-end;
+}
+
+.dice-container{
+    height: 10%;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    background: #cd0473;
+    margin-top: auto;
+}
+
+.dice {
+    max-width: 40px;
+    max-height: 40px;
+    border-radius: 10px;
+}
