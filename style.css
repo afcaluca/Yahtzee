@@ -129,6 +129,7 @@ body {
   border-radius: 10px;
   transition: all 0.4s linear;
   z-index: 1000;
+  transform: translate(0, 0);
 }
 
 .face {

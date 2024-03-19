@@ -2,14 +2,17 @@
 let Dobbelsteen = [];
 let lockedDie = [];
 let points = [];
+let rollsLeft = 999;
 
 let tkind = false;
 let fkind = false;
 
 //starts the game
 function rollDice() {
+    if (rollsLeft == 0) return;
     Dobbelsteen = [];
     for (let i = 0; i < 5; i++) {
+        let die = document.getElementById('dice' + (i + 1));
         let dice = document.getElementById('die' + (i + 1));
         if (lockedDie.includes(i + 1)) {
             Dobbelsteen.push(parseInt(dice.name));
@@ -19,10 +22,20 @@ function rollDice() {
         Dobbelsteen.push(number);
         dice.name = number;
         dice.src = "images/dice" + number + ".png";
+        animateDice(die);
     }
-    console.log(Dobbelsteen);
-    console.log(lockedDie);
+    rollsLeft--;
     fillText();
+    document.getElementById("rollsLeftText").textContent = `rolls left: ${rollsLeft}`;
+}
+
+function animateDice(dice) {
+    const board = document.getElementById('playArea');
+    let random = Math.floor(Math.random() * 360) + 1;
+    let width = Math.floor(Math.random() * board.offsetWidth) - 100;
+    let height = Math.floor(Math.random() * board.offsetHeight) - 75;
+    dice.style.transform = `translate(${width}px, -${height}px) rotate(${random}deg) scale(1.5)`;
+    console.log(board);
 }
 
 
@@ -42,7 +55,17 @@ function holdDice(die) {
         lockedDie.push(die);
         dice.style.border = "5px solid red";
     }
-    console.log(lockedDie);
+}
+
+//locks the points and pushes them to the points array
+function lockPoints(scoreId) {
+    rollsLeft = 3;
+    let scoreElement = document.getElementById(scoreId);
+    let score = parseInt(scoreElement.textContent);
+    console.log(this);
+    scoreElement.name = 'locked';
+    points.push(score);
+    scoreElement.style.backgroundColor = "lightgray";
 }
 
 //fills the table with values
@@ -68,8 +91,12 @@ function fillText() {
     fkind = false;
     for (let i = 0; i < 6; i++) {
         let iets = document.getElementById((i + 1) + "p1");
+        if (iets.name == 'locked') {
+            continue;
+        }
         let count = checkDice(i + 1);
         iets.textContent = count * (i + 1);
+        console.log(points);
     }
     //fill the text with the values
     let yahtzeeText = document.getElementById("yahtzeep1");
@@ -80,16 +107,30 @@ function fillText() {
     let chanceText = document.getElementById("chancep1");
     let fullHouseText = document.getElementById("fullHousep1");
     let totalScoreText = document.getElementById("total1");
-    let rollsLeftText = document.getElementById("rollsLeft");
-    yahtzeeText.textContent = yahtzee();
-    tkindText.textContent = threeOfAKind();
-    fkindText.textContent = fourOfAKind();
-    chanceText.textContent = chance();
-    smallStraightText.textContent = smallStraight();
-    largeStraightText.textContent = largeStraight();
-    fullHouseText.textContent = fullHouse();
+    // let rollsLeftText = document.getElementById("rollsLeft");
+    if (yahtzeeText.style.backgroundColor !== "lightgray") {
+        yahtzeeText.textContent = yahtzee();
+    }
+    if (tkindText.style.backgroundColor !== "lightgray") {
+        tkindText.textContent = threeOfAKind();
+    }
+    if (fkindText.style.backgroundColor !== "lightgray") {
+        fkindText.textContent = fourOfAKind();
+    }
+    if (chanceText.style.backgroundColor !== "lightgray") {
+        chanceText.textContent = chance();
+    }
+    if (smallStraightText.style.backgroundColor !== "lightgray") {
+        smallStraightText.textContent = smallStraight();
+    }
+    if (largeStraightText.style.backgroundColor !== "lightgray") {
+        largeStraightText.textContent = largeStraight();
+    }
+    if (fullHouseText.style.backgroundColor !== "lightgray") {
+        fullHouseText.textContent = fullHouse();
+    }
     totalScoreText.textContent = totalScores();
-    rollsLeftText.textContent = Throwsleft();
+    // rollsLeftText.textContent = rollsLeft();
 }
 
 //checks if the dice are a three of a kind
@@ -173,11 +214,8 @@ function totalScores() {
     points.forEach(point => {
         totalScore += point;
     });
+    let totalScoreText = document.getElementById("total1");
+    totalScoreText.textContent = totalScore;
     return totalScore;
-}
-
-function rollsLeft() {
-    let rolls = 3 - lockedDie.length;
-    return rolls;
 }
 
